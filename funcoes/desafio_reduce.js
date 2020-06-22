@@ -1,12 +1,15 @@
-Array.prototype.meuFilter = function(){
-  
-  for (let i = 0; i < this.length; i++) {
-    const element = this[i];
-    acc
-    
-  }
-}
+Array.prototype.meuReduce = function(fn, inicial){
+  let acc = inicial
 
+  for(let i = 0; i<this.length;i++){
+    if(!acc && i ===0){
+      acc = this[i]
+      continue
+    }
+    acc = fn(acc, this[i], i, this)
+  }
+  return acc
+}
 const carrinho = [
   { nome: "Caneta", qtde: 10, preco: 7.99, fragil:true },
   { nome: "Impressora", qtde: 0, preco: 600, fragil:true },
@@ -15,14 +18,24 @@ const carrinho = [
   { nome: "Tesoura", qtde: 1, preco: 19.2, fragil:true },
 ];
 
-const getFragil = item => item.fragil
-const getTotal = item => item.qtde * item.preco
-const getValorTotal = (acc, el) => acc + el
+const getTotal = (item) => item.qtde * item.preco;
 
-const fragil = carrinho.filter(getFragil)
-const total = fragil.map(getTotal)
-const valorTotal = total.reduce(getValorTotal)
+const getMedia = (acc, el) => {
+  const novaQtde = acc.qtde + 1
+  const novoTotal = acc.total + el
+  console.log(acc, el)
+  return {
+    qtde: novaQtde,
+    total: novoTotal,
+    media: novoTotal/novaQtde,
+  };
+};
+const mediaInicial = { qtde: 0, total: 0, media: 0 }
 
+const totais = carrinho.map(getTotal);
 
+console.log(totais);
 
-console.log(valorTotal)
+const totalGeral = totais.meuReduce(getMedia, mediaInicial)
+
+console.log(totalGeral);
